@@ -1,0 +1,99 @@
+
+1. Modify kind: Deployment change to apps/v1
+   Add under the kind: Deployment spec: selector.  example:
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                     app: <sitename>
+
+
+2. Update to new ACR location-   acuswlpappacr08.azurecr.io
+
+3. Update the "data:" section of "cm" configuration with correct PRIVATEKEY & PUBLICKEY
+   Note:
+	- check the site's current validity from browser and make a note
+	- Decode the "PUBLICKEY" using the site https://www.sslshopper.com/certificate-decoder.html
+	- If both validities are matching, then no need to touch this part.
+	- If certificate is not matching or the KEYs in "cm" section is old, then download and extract the CRT and KEY and update in YAML
+
+
+4. Modify ingress-kind apiVersion: networking.k8s.io/v1beta1
+
+   Update the "Annotations" section in Ingress using below contents
+   
+	   annotations:
+	       kubernetes.io/ingress.class: static-sites
+	       nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+	       nginx.ingress.kubernetes.io/rewrite-target: /$1
+	       nginx.ingress.kubernetes.io/ssl-redirect: "true"
+	       nginx.ingress.kubernetes.io/configuration-snippet: |
+		 more_set_headers "server: hide";
+	         more_set_headers "Content-Security-Policy: frame-ancestors 'none'";
+      
+  
+5. Update the "data:" section of "Secret" configuration with correct certificate Key and Crt
+
+
+
+
+COMPLETED:
+----------
+bbclanding.ey.net.yaml
+
+PENDING:
+--------
+asiapacificcommunications.ey.net.yaml
+assurance-td.ey.net.yaml
+awstraining.us.na.ey.net.yaml
+bbclanding.ey.net.yaml
+be-human-emeia-partner-development.ey.net.yaml
+beinghumanedtion2.ey.net.yaml
+bpnews.ey.net.yaml
+cbs-careers-magazine.ey.net.yaml
+cireports.ey.net.yaml
+competitive-engagement.ey.net.yaml
+csglondon.ey.net.yaml
+dandi.belonging-partner-toolkit.ey.net.yaml
+dandi.belonging-toolkit.ey.net.yaml
+dandi.raceandgendertoolkit.ey.net.yaml
+edocsimagehost.us.na.ey.net.yaml
+emeiafso-strategicofferings.ey.net.yaml
+epaguidance.ey.net.yaml
+eycanvas-clientportal-guide.ey.net.yaml
+eyclanding.ey.net.yaml
+eyglobalone.ey.net.yaml
+eygsstory.ey.net.yaml
+eygsvideo.ey.net.yaml
+eysmartautomation.yaml
+eysouthampton.ey.net.yaml
+fso-talent-team.ey.net.yaml
+fsotogether.ey.net.yaml
+globaladvisorytalent.ey.net.yaml
+####globaleyhelix.ey.net.yaml
+gsblog.ey.net.yaml
+health-ey-intro-2.ey.net.yaml
+itsdesign.us.na.ey.net.yaml
+itserviceslearning.us.na.ey.net.yaml
+iweb.us.na.ey.net.yaml
+learn.glms.us.na.ey.net.yaml
+marketingcomms.ey.net.yaml
+marketwatch.ey.net.yaml
+messaging.ey.net.yaml
+myey.ey.net.yaml
+nokiacasestudy.ey.net.yaml
+pas.ey.net.yaml
+pasofferings.ey.net.yaml
+pensionhub.uk.ey.net.yaml
+portfolioviz.ey.net.yaml
+producebettercontent.ey.net.yaml
+producebetterevents.ey.net.yaml
+#####static-site-template.yaml
+Tax.skills.competency.learning.ey.net.yaml
+teameyelections.ey.net.yaml
+telecom.iweb.ey.com.yaml
+the-disruption-masterclass-handbook.ey.net.yaml
+thedownload.yaml
+transformativeleadership.ey.net.yaml
+####workreimagined.ey.net.yaml
+your-total-rewards.ey.net.yaml

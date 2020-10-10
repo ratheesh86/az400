@@ -1,0 +1,36 @@
+parameters:
+- name: cluster_directory
+  displayName: Select cluster directory
+  type: string
+  values:
+  - USWest-internal-uat-yaml
+  - USWest-internal-prod-yaml
+  - USWest-external-uat-yaml
+  - USWest-external-prod-yaml
+  
+trigger: 
+- manual
+
+pool:
+  name: Azure Pipelines
+stages:
+- stage: YAMLCreation       
+  displayName: CopyFiles 
+  jobs:
+  - job: CopyFiles 
+    pool: 
+      name: CloudAppEngTeam
+    steps:
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+      inputs:
+        SourceFolder: 'static-sites/${{ parameters.cluster_directory }}'
+        Contents: |
+         migration3.txt
+         #DNSRemovalScript.ps1
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: drop'
+      inputs:
+        PathtoPublish: 'static-sites/${{ parameters.cluster_directory }}'
